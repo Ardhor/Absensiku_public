@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "absensi",
+    "slug": "absensi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon_a.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/icon_a.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#557C56"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "newArchEnabled": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon_a.png",
+        "backgroundColor": "#557C56"
+      },
+      "newArchEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/images/icon_a.png"
+    }
+  }
+}

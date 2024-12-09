@@ -3,36 +3,39 @@ import React from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 
-type CardClass2Props = {
-    class_name: string;
+type CardClassProps = {
+    classname: string;
     description: string;
-    admin: string;
+    name: string;
 }
 
-const CardClass2: React.FC<CardClass2Props> = ({ class_name, description, admin }: any) => {
+const CardClass: React.FC<CardClassProps> = ({ classname, description, name }: any) => {
     return (
         <View>
             <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => Alert.alert("CARD DIPICIK")}
             >
-                <View
-                    className='mt-[10] w-[100%] bg-[#009688] px-[25] py-[15] justify-start items-start rounded-[15]'
+                <View style={styles.panel}
+                    className='mt-10 w-100% bg-zinc-800 px-25 py-15 justify-start items-start rounded-15'
                 >
                     <Text
-                        className='text-[16px] text-[#ffffff] font-[800]'
-                    >{class_name}</Text>
+                        style={{ color:'#40dff4' }}
+                        className='text-[16px] font-[800]'
+                    >{classname}</Text>
                     <Text
                         className='text-[15px] text-[#ffffff] font-[600] mt-[10]'
                     >{description}</Text>
                     <Text
-                        className='text-[14px] text-[#ffffff] font-[400] mt-[30]'
-                    >{admin}</Text>
+                        style={{ color: 'yellow' }}
+                        className='text-[15px] font-[600] mt-[10]'
+                    >{name}</Text>
+
                     <TouchableWithoutFeedback
                         onPress={() => Alert.alert("OPTION DIPICIK")}
                     >
                         <SimpleLineIcons name="options" size={20} color={"#fff"}
-                            className='self-end absolute right-[20] top-[12] '
+                            className='self-end absolute right-[20] top-[12]'
                         />
                     </TouchableWithoutFeedback>
                 </View>
@@ -41,8 +44,15 @@ const CardClass2: React.FC<CardClass2Props> = ({ class_name, description, admin 
     )
 }
 
-export default CardClass2
+export default CardClass
 
 const styles = StyleSheet.create({
-
+    panel: {
+        backgroundColor: "#3A8DBC",
+        borderRadius: 16,
+        padding: 15,
+        marginBottom: 10,
+        width: "95%",
+        alignSelf: "center"
+    }
 })

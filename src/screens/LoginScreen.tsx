@@ -95,7 +95,7 @@ const LoginScreen = () => {
 
 
         try {
-            const response = await axios.post("http://172.20.10.2:3000/login", {
+            const response = await axios.post("http://192.168.1.2:3000/login", {
                 identifier: input, // Kirim identifier
                 password,
             });

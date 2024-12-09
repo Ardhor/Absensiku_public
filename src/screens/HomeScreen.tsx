@@ -6,20 +6,16 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../navigation/StackNavigator";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import CardClass1 from "../../components/cardClass/CardClass1"
-import CardClass2 from "../../components/cardClass/CardClass2"
-import CardClass3 from "../../components/cardClass/CardClass3"
-import CardClass4 from "../../components/cardClass/CardClass4"
-import CardClass5 from "../../components/cardClass/CardClass5"
+import CardClass from "../../components/cardClass/CardClass"
 import Toast from "react-native-toast-message"
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '../../navigation/TabNavigator';
-import { GetClasses } from '../api/GetClasses';
+
 
 
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 const HomeScreen = () => {
-
+    const [data, setData] = useState<any[]>([]);  // State untuk menyimpan data kelas
     const [loading, setLoading] = useState<boolean>(true);  // State loading
 
     const route = useRoute<HomeScreenRouteProp>();
@@ -31,17 +27,28 @@ const HomeScreen = () => {
     const [modalMessage, setModalMessage] = useState("");
 
     // Fungsi untuk mengambil data dari API
-    const [data,SetData] = useState(null)
-    GetClasses
-        .then(result => {
-            SetData(result?.data.data.data)
-        })
+    // const [data,SetData] = useState(null)
+    // GetClasses
+    //     .then(result => {
+    //         SetData(result?.data.data.data)
+    //     })
 
-    const getRandomCardComponent = () => {
-        const cardComponents = [CardClass1, CardClass2, CardClass3, CardClass4, CardClass5];
-        const randomIndex = Math.floor(Math.random() * cardComponents.length);
-        return cardComponents[randomIndex];
-    };
+    useEffect(() => {
+        // Ambil data dari API atau sumber lainnya
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://192.168.1.2:3000/dataClass');
+                const jsonData = await response.json();
+                setData(jsonData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     useEffect(() => {
         // Simulasi waktu loading selama 3 detik
@@ -159,16 +166,13 @@ const HomeScreen = () => {
                     <View>
                         <FlatList
                             data={data}
-                            renderItem={({ item, index }) => {
-                                const CardComponent = getRandomCardComponent();
-                                return (
-                                    <CardComponent
-                                        class_name={item.classname}
+                            renderItem={({ item }) => (
+                                    <CardClass
+                                        classname={item.classname}
                                         description={item.description}
-                                        admin={item.user_id}
+                                        name={item.name}
                                     />
-                                );
-                            }}
+                            )}
                             keyExtractor={(item, index) => index.toString()} // Gunakan index sebagai key
                             className='mt-[10] rounded-[15]'
                             scrollEnabled={false}

@@ -9,7 +9,7 @@ export const GetClasses = (async () => {
         } as RawAxiosRequestHeaders,
     };
     try {
-        const response: AxiosResponse = await apiManager.get('/classes?page=1', config)
+        const response: AxiosResponse = await apiManager.get('/dataClass', config)
         return response;
     } catch (error) {
         console.log("Gagal mengambil data", error)

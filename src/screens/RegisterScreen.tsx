@@ -208,7 +208,7 @@ const RegisterScreen = () => { // Ganti nama menjadi RegisterScreen
 
 
         try {
-            const response = await axios.post('http://172.20.10.2:3000/register', {
+            const response = await axios.post('http://192.168.1.2:3000/register', {
                 name,
                 username: input,
                 password,

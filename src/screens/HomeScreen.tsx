@@ -14,12 +14,12 @@ import CardClass5 from "../../components/cardClass/CardClass5"
 import Toast from "react-native-toast-message"
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '../../navigation/TabNavigator';
+import { GetClasses } from '../api/GetClasses';
 
 
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 const HomeScreen = () => {
 
-    const [data, setData] = useState<any[]>([]);  // State untuk menyimpan data kelas
     const [loading, setLoading] = useState<boolean>(true);  // State loading
 
     const route = useRoute<HomeScreenRouteProp>();
@@ -31,22 +31,11 @@ const HomeScreen = () => {
     const [modalMessage, setModalMessage] = useState("");
 
     // Fungsi untuk mengambil data dari API
-    useEffect(() => {
-        // Ambil data dari API atau sumber lainnya
-        const fetchData = async () => {
-            try {
-                const response = await fetch('http://172.20.10.2:3000/dataClass');
-                const jsonData = await response.json();
-                setData(jsonData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
+    const [data,SetData] = useState(null)
+    GetClasses
+        .then(result => {
+            SetData(result?.data.data.data)
+        })
 
     const getRandomCardComponent = () => {
         const cardComponents = [CardClass1, CardClass2, CardClass3, CardClass4, CardClass5];
@@ -169,14 +158,14 @@ const HomeScreen = () => {
 
                     <View>
                         <FlatList
-                            data={data.slice(0,5)}
-                            renderItem={({ item }) => {
+                            data={data}
+                            renderItem={({ item, index }) => {
                                 const CardComponent = getRandomCardComponent();
                                 return (
                                     <CardComponent
-                                        class_name={item.class_name}
+                                        class_name={item.classname}
                                         description={item.description}
-                                        admin={item.admin}
+                                        admin={item.user_id}
                                     />
                                 );
                             }}

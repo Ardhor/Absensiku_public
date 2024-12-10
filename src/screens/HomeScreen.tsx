@@ -165,7 +165,7 @@ const HomeScreen = () => {
 
                     <View>
                         <FlatList
-                            data={data}
+                            data={data.slice(0, 2)}
                             renderItem={({ item }) => (
                                     <CardClass
                                         classname={item.classname}

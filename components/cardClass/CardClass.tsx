@@ -18,11 +18,15 @@ const CardClass: React.FC<CardClassProps> = ({ classname, description, name }: a
             >
                 <View style={styles.panel}
                     className='mt-10 w-100% bg-zinc-800 px-25 py-15 justify-start items-start rounded-15'
-                >
-                    <Text
-                        style={{ color:'#40dff4' }}
-                        className='text-[16px] font-[800]'
-                    >{classname}</Text>
+                > 
+                    <View style={{  // View classname
+                        paddingRight: 50
+                    }}>   
+                        <Text
+                            style={{ color:'#40dff4' }}
+                            className='text-[16px] font-[800]'
+                            >{classname}</Text>
+                    </View>
                     <Text
                         className='text-[15px] text-[#ffffff] font-[600] mt-[10]'
                     >{description}</Text>

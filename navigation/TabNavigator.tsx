@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Image, Alert } from "react-native";
-import React from "react";
+import React, { useRef } from "react";
 import { BottomTabNavigationProp, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../src/screens/HomeScreen";
 import ProfileScreen from "../src/screens/ProfileScreen";
@@ -10,6 +10,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { useNavigation } from "@react-navigation/native";
+import CustomHeader from "../components/customHeader/homeHeader";
 
 // TabParamList.ts
 export type TabParamList = {
@@ -17,6 +18,9 @@ export type TabParamList = {
     History: undefined;
     Scan: undefined;
     Profile: undefined;
+    MoreClass: undefined;
+    AddClass: undefined;
+    JoinClass: undefined;
 };
 
 
@@ -28,6 +32,7 @@ const Tabs = () => {
     const handleGoToProfile = () => {
         navigation.navigate('Profile'); // Navigasi langsung ke tab Profile
     };
+
 
 
     return (
@@ -55,8 +60,9 @@ const Tabs = () => {
                     tabBarLabel: ({ focused }) => (
                         <Text style={[styles.labelItem, { color: focused ? "#FED40E" : "#8a8787" }]}>Home</Text>
                     ),
-                    headerShown: false,
-                    
+                    headerShown: true,
+                    header: () => <CustomHeader />
+
                 }}
             />
             <Tab.Screen
@@ -66,7 +72,7 @@ const Tabs = () => {
                     tabBarIcon: ({ focused }) => (
                         <MaterialIcons
                             name={focused ? "history" : "history-toggle-off"}
-                            size={25}
+                            size={28}
                             color={focused ? "#FED40E" : "#8999a1"}
                         />
                     ),
@@ -98,17 +104,19 @@ const Tabs = () => {
                 component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <Ionicons
-                            name={focused ? "person" : "person-outline"}
-                            size={25}
-                            color={focused ? "#FED40E" : "#8999a1"}
-                        />
+                            <Ionicons
+                                name={focused ? "person" : "person-outline"}
+                                size={25}
+                                color={focused ? "#FED40E" : "#8999a1"}
+                            />
+                        
                     ),
                     tabBarLabel: ({ focused }) => (
                         <Text style={[styles.labelItem, { color: focused ? "#FED40E" : "#8a8787" }]}>Profile</Text>
                     ),
                 }}
             />
+            
         </Tab.Navigator>
     );
 };
@@ -139,34 +147,4 @@ const styles = StyleSheet.create({
         marginTop: 3,
         fontWeight: "500",
     },
-    headerSafeArea: {
-        backgroundColor: "#557c56",
-    },
-    headerContainer: {
-        paddingHorizontal: 15,
-        paddingBottom: 5,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        borderBottomColor: "#7F8487",
-        borderBottomWidth: 1,
-    },
-    iconContainer: {
-        paddingTop: 3,
-    },
-    headerTitle: {
-        color: "#fed40e",
-        fontStyle: "italic",
-        fontSize: 28,
-        fontWeight: "700",
-        flex: 1,
-        marginLeft: 15,
-    },
-    avatarContainer: {
-        marginRight: 30
-    },
-    avatar: {
-        width: 45,
-        height: 45,
-    }
 })

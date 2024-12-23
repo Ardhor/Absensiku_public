@@ -1,23 +1,23 @@
 import { ActivityIndicator, Alert, FlatList, KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ModalError from '../../assets/CustomAlert/ModalError';
 import ModalSuccess from '../../assets/CustomAlert/ModalSuccess';
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../navigation/StackNavigator";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import CardClass1 from "../../components/cardClass/CardClass1"
-import CardClass2 from "../../components/cardClass/CardClass2"
-import CardClass3 from "../../components/cardClass/CardClass3"
-import CardClass4 from "../../components/cardClass/CardClass4"
-import CardClass5 from "../../components/cardClass/CardClass5"
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import CardClass from "../../components/cardClass/CardClass"
 import Toast from "react-native-toast-message"
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { TabParamList } from '../../navigation/TabNavigator';
+import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet";
 
 
 type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
 const HomeScreen = () => {
+
+    const actionSheetRef = useRef<ActionSheetRef>(null);
 
     const [data, setData] = useState<any[]>([]);  // State untuk menyimpan data kelas
     const [loading, setLoading] = useState<boolean>(true);  // State loading
@@ -30,40 +30,24 @@ const HomeScreen = () => {
     const [modalTitle, setModalTitle] = useState("");
     const [modalMessage, setModalMessage] = useState("");
 
-    // Fungsi untuk mengambil data dari API
     useEffect(() => {
-        // Ambil data dari API atau sumber lainnya
         const fetchData = async () => {
             try {
-                const response = await fetch('http://172.20.10.2:3000/dataClass');
+                const response = await fetch('http://192.168.1.6:3000/dataclass'); // Gantilah dengan URL yang benar
                 const jsonData = await response.json();
-                setData(jsonData);
+                setData(jsonData);  // Update data state dengan data yang diterima
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setModalTitle("Error");
+                setModalMessage("Terjadi kesalahan saat mengambil data.");
+                setShowError(true);
             } finally {
-                setLoading(false);
+                setLoading(false);  // Mengubah loading menjadi false setelah data diterima
             }
         };
 
         fetchData();
-    }, []);
-
-    const getRandomCardComponent = () => {
-        const cardComponents = [CardClass1, CardClass2, CardClass3, CardClass4, CardClass5];
-        const randomIndex = Math.floor(Math.random() * cardComponents.length);
-        return cardComponents[randomIndex];
-    };
-
-    useEffect(() => {
-        // Simulasi waktu loading selama 3 detik
-        const timer = setTimeout(() => {
-            setLoading(false);
-        });
-
-        // Clean up timer ketika komponen di-unmount
-        return () => clearTimeout(timer);
-    }, []);
-
+    }, []);  
 
     if (loading) {
         return (
@@ -76,7 +60,7 @@ const HomeScreen = () => {
     return (
 
 
-        <SafeAreaView className='flex-1 bg-[#c0c0c0]'>
+        <View className='flex-1 bg-[#c0c0c0]'>
             <ModalError
                 visible={showError}
                 title={modalTitle}
@@ -92,12 +76,11 @@ const HomeScreen = () => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View className='px-[15] pb-[100]' >
 
-
                     <View
-                        className='mt-[80] bg-[#fff] w-[80%] rounded-[15] justify-center self-center px-[15] py-[25] shadow'
+                        className='mt-[55] bg-[#fff] w-[80%] rounded-[15] justify-center self-center px-[15] py-[25] shadow'
                     >
                         <FontAwesome
-                            name="graduation-cap" size={70} color={"#3c583c"} className='absolute left-[185] bottom-[130]' />
+                            name="graduation-cap" size={70} color={"#3c583c"} className='absolute left-[205] bottom-[105]' />
                         <Text
                             className='text-[16px] text-[#000] font-[400]'
                         >Halo,</Text>
@@ -109,48 +92,14 @@ const HomeScreen = () => {
                         >Don't Miss Your Attendance Today!</Text>
                     </View>
 
-                    <View>
-                        {/* Card, Color :
-                    566e79
-                    33ac70
-                    317ae1
-                    36474f
-                    009688
-                    */}
-
-                        {/* <TouchableOpacity
-                        activeOpacity={0.5}
-                        onPress={() => Alert.alert("CARD DIPICIK")}
-                    >
-                        <View
-                            className='mt-[10] w-[100%] bg-[#36474f] px-[25] py-[15] justify-start items-start rounded-[15]'
-                        >
-                            <Text
-                                className='text-[16px] text-[#ffffff] font-[800]'
-                            >Class</Text>
-                            <Text
-                                className='text-[15px] text-[#ffffff] font-[600] mt-[10]'
-                            >Desc</Text>
-                            <Text
-                                className='text-[14px] text-[#ffffff] font-[400] mt-[30]'
-                            >Admin
-                            </Text>
-
-                            <TouchableWithoutFeedback
-                                onPress={() => Alert.alert("OPTION DIPICIK")}
-                            >
-                                <SimpleLineIcons name="options" size={20} color={"#fff"}
-                                    className='self-end absolute right-[20] top-[12]'
-                                />
-                            </TouchableWithoutFeedback>
-                        </View>
-                    </TouchableOpacity> */}
-                    </View>
 
                     <View className='flex-row mt-[20] flex-1 justify-between items-center mx-[10] shadow'>
                         <TouchableOpacity
                             className='bg-[#00be00] px-[30] py-[15] rounded-[15]'
-                            onPress={() => Alert.alert("Add Class")}
+                            onPress={() => {
+                                actionSheetRef.current?.show();
+
+                            }}
                         >
                             <Text
                                 className='text-[#fff] text-[16px] font-[700]'
@@ -159,7 +108,7 @@ const HomeScreen = () => {
 
                         <TouchableOpacity
                             className='bg-[#00be00] px-[30] py-[15] rounded-[15]'
-                            onPress={() => Alert.alert("More Class")}
+                            onPress={() => navigation.navigate("MoreClass")}
                         >
                             <Text
                                 className='text-[#fff] text-[16px] font-[700]'
@@ -169,29 +118,58 @@ const HomeScreen = () => {
 
                     <View>
                         <FlatList
-                            data={data.slice(0,5)}
+                            data={data.slice(0, 2)}
                             renderItem={({ item }) => {
-                                const CardComponent = getRandomCardComponent();
                                 return (
-                                    <CardComponent
-                                        class_name={item.class_name}
+                                    <CardClass
+                                        classname={item.classname}
                                         description={item.description}
-                                        admin={item.admin}
+                                        admin={item.name}
                                     />
                                 );
                             }}
                             keyExtractor={(item, index) => index.toString()} // Gunakan index sebagai key
-                            className='mt-[10] rounded-[15]'
+                            style={{ marginTop: 10, borderRadius: 15 }}
                             scrollEnabled={false}
                         />
+                    </View>
 
 
+                    <View>
+                        <ActionSheet
+                            ref={actionSheetRef}
+                            containerStyle={{
+                                height: 165, backgroundColor: "#c7c7c7", width: "100%",
+                            }}
+                        >
+                            <View className='p-[10] flex-column mt-[10]'>
+
+                                <TouchableOpacity className='mt-[5] mb-[15] bg-[#31363F] px-[15] py-[10] rounded-[10] w-[70%] items-center self-center justify-center'
+                                    onPress={() => {
+                                        actionSheetRef.current?.hide();  // Menutup ActionSheet
+                                        navigation.navigate("AddClass"); // Navigasi ke AddClass
+                                    }}
+                                >
+                                    <Text className='text-[#fff] text-[18px] text-center ' >Create Class</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity className='mb-[10] bg-[#31363F] px-[15] py-[10] rounded-[10] w-[70%] items-center self-center justify-center'
+                                    onPress={() => {
+                                        actionSheetRef.current?.hide();  // Menutup ActionSheet
+                                        navigation.navigate("JoinClass"); // Navigasi ke AddClass
+                                    }}
+                                >
+                                    <Text className='text-[#fff] text-[18px] text-center ' >Join Class</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        </ActionSheet>
                     </View>
 
                 </View>
 
             </ScrollView>
-        </SafeAreaView >
+        </View >
     )
 }
 

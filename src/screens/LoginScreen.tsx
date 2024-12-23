@@ -24,14 +24,16 @@ import TitleAbsensiKu from "../../components/headerAbsensiKu/index";
 import BtnGoogle from "../../components/btnGoogle/index";
 import FooterBeforeLogin from "../../components/footerBeforeLogin_1/index";
 import BtnSubmit_1 from "../../components/btnSubmit_1/index";
+import { useAuth } from "../../components/AuthContext";
 
 type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
-const LoginScreen = () => {
+const LoginScreen: React.FC = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const route = useRoute<LoginScreenRouteProp>();
     const [input, setInput] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const {setUsername} = useAuth()
 
     const [showError, setShowError] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
@@ -95,12 +97,13 @@ const LoginScreen = () => {
 
 
         try {
-            const response = await axios.post("http://172.20.10.2:3000/login", {
+            const response = await axios.post("http://192.168.1.6:3000/login", {
                 identifier: input, // Kirim identifier
                 password,
             });
-
+            
             if (response.status === 200) {
+                setUsername(response.data.user_id) 
                 Toast.show({
                     type: 'success',
                     text1: 'Welcome'

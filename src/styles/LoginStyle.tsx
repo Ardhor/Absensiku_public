@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: 15,
+        
     },
     inputContainer: {
         flexDirection: "row",
@@ -48,6 +49,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 20,
         position: "relative",
+
     },
     iconContainer: {
         position: "absolute",

@@ -7,7 +7,7 @@ import { RootStackParamList } from "../../navigation/StackNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ApiManager from '../../components/ApiManager'
-import { AuthProvider, useAuth } from '../../components/AuthContext'; // mau digunakan untuk menyimpan username ketika login, tetapi tidak bisa
+import { useAuth } from '../../components/AuthContext'; // mau digunakan untuk menyimpan username ketika login, tetapi tidak bisa
 
 const JoinClass: React.FC = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -18,9 +18,9 @@ const JoinClass: React.FC = () => {
     const [data, setData] = useState<any[]>([]);  // State untuk menyimpan data kelas
 
     const [code_class, setCodeClass] = useState<string>('');
-    const [username, setUsername] = useState<string>('');
+    const { username } = useAuth();
     // const {username} = useAuth(); // mengambil user_id dari context
-    // console.log("username in join class: ", username) // debugging username yang tersimpan
+    console.log("username in join class: ", username) // debugging username yang tersimpan
     
     const [loading, setLoading] = useState<boolean>(false);  // State loading
     const codeClassInputRef = useRef<TextInput>(null); 
@@ -71,10 +71,6 @@ const JoinClass: React.FC = () => {
     const clearCodeClass = () => {
         setCodeClass('');
     };
-    const clearUsername = () => {
-        setUsername('');
-    };
-
     // Logika untuk mengecek apakah tombol "Create" bisa diaktifkan
     const isCreateButtonDisabled = !(code_class) || !(username);
 
@@ -98,23 +94,11 @@ const JoinClass: React.FC = () => {
                     <View className='py-[15]'>
 
                         <View className='bg-[#36474f] w-[100%] h-[300%] mt-[35] self-center justify-start p-[15] rounded-[5]'>
-                            {/* Untuk inputan Username */}
-                            <View className='bg-[#ffffff] w-[100%] h-[60] rounded-[10] justify-center pl-[20] my-[15]'>
-                                <TextInput
-                                    style={{ fontSize: 20, color: '#000000', width: "85%", }}
-                                    placeholder='Enter Username'
-                                    placeholderTextColor="grey"
-                                    value={username}
-                                    onChangeText={setUsername}
-                                />
-                                {username.length > 0 && (
-                                    <TouchableOpacity
-                                        className='absolute right-[3%] justify-center content-center'
-                                        onPress={clearUsername}
-                                    >
-                                        <Ionicons name="close" size={35} color="black" />
-                                    </TouchableOpacity>
-                                )}
+                            {/* Text untuk menampilkan username yang sedang login */}
+                            <View>
+                                <Text style={{ color: "#FFF", fontSize: 15}}>
+                                    Anda Login Menggunakan username <Text style={{ color: "#fed40e",fontStyle:"italic" }}>{username}</Text>
+                                </Text>
                             </View>
                             {/* Untuk inputan code class */}
                             <View className='bg-[#ffffff] w-[100%] h-[60] rounded-[10] justify-center pl-[20] my-[15]'>

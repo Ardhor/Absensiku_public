@@ -1,12 +1,17 @@
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import ModalError from '../../assets/CustomAlert/ModalError';
 import ModalSuccess from '../../assets/CustomAlert/ModalSuccess';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useAuth } from '../../components/AuthContext';
+import axios from 'axios';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/StackNavigator';
 
 const AddClass = () => {
 
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const [showError, setShowError] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
@@ -14,9 +19,31 @@ const AddClass = () => {
 
     const [className, setClassName] = useState<string>('');
     const [description, setDescription] = useState<string>('');
+    const {user_id} = useAuth()
+    const [generateCode, setGenerateCode] = useState<string | null>(null)
+    console.log("user_id in add class:", user_id)
 
     const classNameInputRef = useRef<TextInput>(null);
 
+    const handleAddClass = async () => {
+        if (!user_id) {
+            Alert.alert("error", "Anda harus loggen in to add a class.");
+            return
+        }
+        try {
+            const response = await axios.post("http://192.168.1.6:3000/add-class", {
+                user_id,
+                classname : className,
+                description,
+            })
+            setGenerateCode(response.data.code_class)
+            Alert.alert("Success", 'Class berhasil dibuat! Code: ')
+            navigation.navigate({name: "Home", params: {isLogin: true}})
+        } catch (error) {
+            Alert.alert("Error", "Gagal membuat kelas baru")
+            console.log(error)
+        }
+    }
     useEffect(() => {
         // Fokus pada className TextInput saat halaman pertama kali dibuka
         const timeoutId = setTimeout(() => {
@@ -109,13 +136,18 @@ const AddClass = () => {
                                 <TouchableOpacity
                                     className={` w-[70%] h-[50] rounded-[10] justify-center items-center ${isCreateButtonDisabled ? 'bg-gray-400' : 'bg-white'}`}
                                     disabled={isCreateButtonDisabled}
-                                // onPress={}
+                                    onPress={handleAddClass}
                                 >
                                     <Text className={`text-center text-xl font-[600] ${isCreateButtonDisabled ? 'text-gray-600' : 'text-black'}`}>
                                         Create
                                     </Text>
                                 </TouchableOpacity>
                             </View>
+                            {generateCode && (
+                                <View> 
+                                    <Text> Class Code: {generateCode}</Text>
+                                </View>
+                            )}
                         </View>
 
                     </View>

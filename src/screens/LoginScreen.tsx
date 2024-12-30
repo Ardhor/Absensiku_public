@@ -34,6 +34,7 @@ const LoginScreen: React.FC = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const {setUsername} = useAuth()
+    const {setUser_id} = useAuth()
 
     const [showError, setShowError] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
@@ -98,12 +99,13 @@ const LoginScreen: React.FC = () => {
 
         try {
             const response = await axios.post("http://192.168.1.6:3000/login", {
-                identifier: input, // Kirim identifier
+                identifier : input, // Kirim identifier
                 password,
             });
             
             if (response.status === 200) {
-                setUsername(response.data.user_id) 
+                setUsername(response.data.username) // membuat username bisa digunakan global
+                setUser_id(response.data.user_id) // membuat user_id bisa digunakan global
                 Toast.show({
                     type: 'success',
                     text1: 'Welcome'
